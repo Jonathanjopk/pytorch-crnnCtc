@@ -45,16 +45,16 @@ class CRNN(nn.Module):
             cnn.add_module(f'relu{i}', relu)
 
         # size of image: (channel, height, width) = (img_channel, img_height, img_width)
-        conv_relu(0)
+        conv_relu(0, batch_norm=True)
         cnn.add_module('pooling0', nn.MaxPool2d(kernel_size=2, stride=2))
         # (64, img_height // 2, img_width // 2)
 
-        conv_relu(1)
+        conv_relu(1, batch_norm=True)
         cnn.add_module('pooling1', nn.MaxPool2d(kernel_size=2, stride=2))
         # (128, img_height // 4, img_width // 4)
 
-        conv_relu(2)
-        conv_relu(3)
+        conv_relu(2, batch_norm=True)
+        conv_relu(3, batch_norm=True)
         cnn.add_module(
             'pooling2',
             nn.MaxPool2d(kernel_size=(2, 1))
@@ -67,7 +67,7 @@ class CRNN(nn.Module):
             nn.MaxPool2d(kernel_size=(2, 1))
         )  # (512, img_height // 16, img_width // 4)
 
-        conv_relu(6)  # (512, img_height // 16 - 1, img_width // 4 - 1)
+        conv_relu(6, batch_norm=True)  # (512, img_height // 16 - 1, img_width // 4 - 1)
 
         output_channel, output_height, output_width = \
             channels[-1], img_height // 16 - 1, img_width // 4 - 1
