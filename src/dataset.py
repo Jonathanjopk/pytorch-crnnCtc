@@ -23,27 +23,21 @@ class Synth90kDataset(Dataset):
         self.img_width = img_width
 
     def _load_from_raw_files(self, root_dir, mode):
-        mapping = {}
-        with open(os.path.join(root_dir, 'lexicon.txt'), 'r') as fr:
-            for i, line in enumerate(fr.readlines()):
-                mapping[i] = line.strip()
-
-        paths_file = None
         if mode == 'train':
-            paths_file = 'annotation_train.txt'
+            paths_file = './data/annotation_train.txt'
         elif mode == 'dev':
-            paths_file = 'annotation_val.txt'
+            paths_file = './data/annotation_val.txt'
         elif mode == 'test':
-            paths_file = 'annotation_test.txt'
+            paths_file = './data/annotation_test.txt'
+        else:
+            raise Exception('Model mode not specified!')
 
         paths = []
         texts = []
         with open(os.path.join(root_dir, paths_file), 'r') as fr:
             for line in fr.readlines():
-                path, index_str = line.strip().split(' ')
-                path = os.path.join(root_dir, path)
-                index = int(index_str)
-                text = mapping[index]
+                filename, text = line.strip().split(' ')
+                path = os.path.join(root_dir, filename)
                 paths.append(path)
                 texts.append(text)
         return paths, texts
