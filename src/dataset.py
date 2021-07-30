@@ -11,7 +11,7 @@ import numpy as np
 
 
 class Synth90kDataset(Dataset):
-    CHARS = '0123456789abcdefghijklmnopqrstuvwxyz'
+    CHARS = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ到年月自至'
     CHAR2LABEL = {char: i + 1 for i, char in enumerate(CHARS)}
     LABEL2CHAR = {label: char for char, label in CHAR2LABEL.items()}
 
