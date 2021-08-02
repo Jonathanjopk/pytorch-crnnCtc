@@ -1,6 +1,6 @@
 
 common_config = {
-    'data_dir': 'data/mnt/ramdisk/max/90kDICT32px/',
+    'data_dir': './data/',
     'img_width': 100,
     'img_height': 32,
     'map_to_seq_hidden': 64,
@@ -21,7 +21,7 @@ train_config = {
     'valid_max_iter': 100,
     'decode_method': 'greedy',
     'beam_size': 10,
-    'checkpoints_dir': 'checkpoints/'
+    'checkpoints_dir': './checkpoints/'
 }
 train_config.update(common_config)
 

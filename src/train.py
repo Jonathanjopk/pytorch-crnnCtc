@@ -47,6 +47,7 @@ def main():
     img_height = config['img_height']
     data_dir = config['data_dir']
 
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print(f'device: {device}')
 

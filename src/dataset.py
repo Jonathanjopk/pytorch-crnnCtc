@@ -24,11 +24,11 @@ class Synth90kDataset(Dataset):
 
     def _load_from_raw_files(self, root_dir, mode):
         if mode == 'train':
-            paths_file = './data/annotation_train.txt'
+            paths_file = 'annotation_train.txt'
         elif mode == 'dev':
-            paths_file = './data/annotation_val.txt'
+            paths_file = 'annotation_val.txt'
         elif mode == 'test':
-            paths_file = './data/annotation_test.txt'
+            paths_file = 'annotation_test.txt'
         else:
             raise Exception('Model mode not specified!')
 
@@ -36,9 +36,9 @@ class Synth90kDataset(Dataset):
         texts = []
         with open(os.path.join(root_dir, paths_file), 'r') as fr:
             for line in fr.readlines():
-                filename, text = line.strip().split(' ')
-                path = os.path.join(root_dir, filename)
-                paths.append(path)
+                file_path, text = line.strip().split(' ')
+                # path = os.path.join(root_dir, filename)
+                paths.append(file_path)
                 texts.append(text)
         return paths, texts
 
