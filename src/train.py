@@ -1,15 +1,21 @@
 import os
 
-import cv2
 import torch
 from torch.utils.data import DataLoader
 import torch.optim as optim
 from torch.nn import CTCLoss
+import torch.nn as nn
 
 from dataset import Synth90kDataset, synth90k_collate_fn
 from model import CRNN
 from evaluate import evaluate
 from config import train_config as config
+
+
+def updateBN(model):
+    for m in model.modules():
+        if isinstance(m, nn.BatchNorm2d):
+            m.weight.grad.data.add_(config['sparsity_rate']*torch.sign(m.weight.data))
 
 
 def train_batch(crnn, data, optimizer, criterion, device):
@@ -27,6 +33,7 @@ def train_batch(crnn, data, optimizer, criterion, device):
 
     optimizer.zero_grad()
     loss.backward()
+    updateBN(crnn)
     optimizer.step()
     return loss.item()
 
@@ -75,6 +82,7 @@ def main():
                 rnn_hidden=config['rnn_hidden'],
                 leaky_relu=config['leaky_relu'])
     if reload_checkpoint:
+        print("reload model from checkpoint")
         crnn.load_state_dict(torch.load(reload_checkpoint, map_location=device))
     crnn.to(device)
 

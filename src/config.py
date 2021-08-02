@@ -13,11 +13,12 @@ train_config = {
     'train_batch_size': 32,
     'eval_batch_size': 512,
     'lr': 0.0005,
+    'sparsity_rate': 0.0001,  # scale sparse rate (default: 0.0001)
     'show_interval': 10,
     'valid_interval': 500,
     'save_interval': 2000,
     'cpu_workers': 4,
-    'reload_checkpoint': None,
+    'reload_checkpoint': "/project/cc-ws-ocr/07.retrain/crnn_ctc/crnn-pytorch/checkpoints/crnn_028000_loss0.18564275319405973.pt",
     'valid_max_iter': 100,
     'decode_method': 'greedy',
     'beam_size': 10,
