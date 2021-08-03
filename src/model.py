@@ -4,8 +4,14 @@ import torch.nn as nn
 class CRNN(nn.Module):
 
     def __init__(self, img_channel, img_height, img_width, num_class,
-                 map_to_seq_hidden=64, rnn_hidden=256, leaky_relu=False):
+                 map_to_seq_hidden=64, rnn_hidden=256, leaky_relu=False, pruning_cfg=None):
         super(CRNN, self).__init__()
+
+        # add cfg
+        if pruning_cfg is None:
+            self.channels = [img_channel, 64, 128, 256, 256, 512, 512, 512]
+        else:
+            self.channels = pruning_cfg
 
         self.cnn, (output_channel, output_height, output_width) = \
             self._cnn_backbone(img_channel, img_height, img_width, leaky_relu)
@@ -21,7 +27,6 @@ class CRNN(nn.Module):
         assert img_height % 16 == 0
         assert img_width % 4 == 0
 
-        channels = [img_channel, 64, 128, 256, 256, 512, 512, 512]
         kernel_sizes = [3, 3, 3, 3, 3, 3, 2]
         strides = [1, 1, 1, 1, 1, 1, 1]
         paddings = [1, 1, 1, 1, 1, 1, 0]
@@ -30,8 +35,8 @@ class CRNN(nn.Module):
 
         def conv_relu(i, batch_norm=False):
             # shape of input: (batch, input_channel, height, width)
-            input_channel = channels[i]
-            output_channel = channels[i+1]
+            input_channel = self.channels[i]
+            output_channel = self.channels[i+1]
 
             cnn.add_module(
                 f'conv{i}',
@@ -70,7 +75,7 @@ class CRNN(nn.Module):
         conv_relu(6, batch_norm=True)  # (512, img_height // 16 - 1, img_width // 4 - 1)
 
         output_channel, output_height, output_width = \
-            channels[-1], img_height // 16 - 1, img_width // 4 - 1
+            self.channels[-1], img_height // 16 - 1, img_width // 4 - 1
         return cnn, (output_channel, output_height, output_width)
 
     def forward(self, images):
